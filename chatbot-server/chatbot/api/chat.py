@@ -80,3 +80,18 @@ async def create_chat_completion(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/")
+async def get_chat(id: str):
+    pass
+
+
+@router.delete("/")
+async def delete_chat(id: str):
+    pass
+
+
+@router.get("/")
+async def get_chat_history():
+    pass

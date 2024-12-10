@@ -22,7 +22,7 @@ class FileResponse(BaseModel):
     purpose: str
 
 
-@router.post("/", response_model=FileResponse)
+@router.post("/upload", response_model=FileResponse)
 async def upload_file(
         purpose: str = Form(..., description="The purpose of the uploaded file."),
         file: UploadFile = File(..., description="The file to be uploaded.")
