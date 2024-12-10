@@ -38,7 +38,7 @@ async def upload_file(
 
         # Save the file to a storage service
         settings = get_settings()
-        with open(f"{settings.chatbot_docs_dir}/{file_id}.{file_suffix}", "wb") as f:
+        with open(f"{settings.chatbot_doc_store}/{file_id}.{file_suffix}", "wb") as f:
             f.write(content)
 
         # Return the response

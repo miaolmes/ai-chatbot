@@ -14,7 +14,7 @@ app.include_router(api_router)
 
 settings = get_settings()
 if not os.path.exists(settings.chatbot_data_dir):
-    os.makedirs(settings.chatbot_docs_dir)
+    os.makedirs(settings.chatbot_doc_store)
 
 
 @app.get("/")
