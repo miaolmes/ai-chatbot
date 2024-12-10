@@ -1,3 +1,4 @@
+import os
 import time
 import uuid
 
@@ -28,8 +29,7 @@ async def upload_file(
 ):
     try:
         # Generate a unique ID for the file
-        file_id = f"file-{uuid.uuid4().hex[:6]}"
-        file_suffix = file.filename.split(".")[-1]
+        file_id = f"file-{uuid.uuid4()}"
         # Simulate saving the file and getting its size
         content = await file.read()
         file_size = len(content)
@@ -38,7 +38,8 @@ async def upload_file(
 
         # Save the file to a storage service
         settings = get_settings()
-        with open(f"{settings.chatbot_doc_store}/{file_id}.{file_suffix}", "wb") as f:
+        os.makedirs(f"{settings.chatbot_doc_store}/{file_id}")
+        with open(f"{settings.chatbot_doc_store}/{file_id}/{file.filename}", "wb") as f:
             f.write(content)
 
         # Return the response
