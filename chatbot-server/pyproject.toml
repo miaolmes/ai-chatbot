@@ -15,7 +15,7 @@ pydantic-settings = "^2.6.1"
 python-multipart = "^0.0.19"
 langchain-core = "^0.3.22"
 langchain-chroma = "^0.1.4"
-
+httpx = { extras = ["socks"], version = "^0.28.0" }
 
 [build-system]
 requires = ["poetry-core"]
