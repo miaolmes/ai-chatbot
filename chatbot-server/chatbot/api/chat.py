@@ -5,7 +5,7 @@ from openai import AsyncOpenAI
 from pydantic import BaseModel, Field
 from starlette.responses import StreamingResponse
 
-from chatbot.llm.client import get_client
+from chatbot.model.openai import get_client
 
 router = APIRouter(
     prefix="/v1/chat",
