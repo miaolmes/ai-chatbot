@@ -1,7 +1,7 @@
 from functools import lru_cache
 from openai import AsyncOpenAI
 
-from .config import get_settings
+from chatbot.config import get_settings
 
 @lru_cache()
 def get_client() -> AsyncOpenAI:
@@ -10,3 +10,4 @@ def get_client() -> AsyncOpenAI:
         api_key=settings.openai_api_key,
         base_url=settings.openai_api_base
     )
+
