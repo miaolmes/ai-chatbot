@@ -1,11 +1,21 @@
 from typing import List, Optional, Union
+from uuid import UUID
 
-from fastapi import HTTPException, Depends, APIRouter
+from fastapi import HTTPException, Depends, APIRouter, Request
 from openai import AsyncOpenAI
 from pydantic import BaseModel, Field
 from starlette.responses import StreamingResponse
 
+from chatbot.db.database import DbSession
 from chatbot.model.openai import get_client
+from chatbot.db.crud import (
+    get_chat_by_id,
+    delete_chat_by_id,
+    get_chat_history,
+    create_chat,
+    create_chat_message,
+    get_chat_messages
+)
 
 router = APIRouter(
     prefix="/v1/chat",
@@ -13,9 +23,21 @@ router = APIRouter(
 )
 
 
+class Chat(BaseModel):
+    id: UUID = Field(..., description="The unique identifier of the chat.")
+    title: str = Field(..., description="The title of the chat.")
+
+    class Config:
+        from_attributes = True
+
+
 class Message(BaseModel):
+    id: Optional[UUID] = None
     role: str = Field(..., description="The role of the message sender (e.g., 'user', 'assistant', or 'system').")
     content: str = Field(..., description="The content of the message.")
+
+    class Config:
+        from_attributes = True
 
 
 class ChatCompletionRequest(BaseModel):
@@ -82,16 +104,47 @@ async def create_chat_completion(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/")
-async def get_chat(id: str):
-    pass
+@router.get("/{chat_id}", status_code=200)
+async def get_chat(request: Request, chat_id: str, db: DbSession) -> Chat:
+    chat = get_chat_by_id(db, chat_id)
+    if not chat:
+        raise HTTPException(status_code=404, detail="Chat not found")
+    return Chat.model_validate(chat)
 
 
-@router.delete("/")
-async def delete_chat(id: str):
-    pass
+@router.delete("/{chat_id}", status_code=204)
+async def delete_chat(request: Request, chat_id: str, db: DbSession):
+    deleted = delete_chat_by_id(db, chat_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Chat not found")
 
 
-@router.get("/")
-async def get_chat_history():
-    pass
+@router.get("/", status_code=200)
+async def get_chats(request: Request, db: DbSession) -> List[Chat]:
+    chats = get_chat_history(db)
+    return [Chat.model_validate(chat) for chat in chats]
+
+
+@router.post("/{chat_id}/messages", status_code=201)
+async def create_message(request: Request, chat_id: str, message: Message, db: DbSession):
+    # create chat if not exists
+    chat = get_chat_by_id(db, chat_id)
+    print(chat)
+    if not chat:
+        create_chat(session=db, chat_id=chat_id, title=message.content)
+
+    db_message = create_chat_message(
+        db,
+        chat_id,
+        message.role,
+        message.content
+    )
+    if not db_message:
+        raise HTTPException(status_code=404, detail="Chat not found")
+    return Message.model_validate(db_message)
+
+
+@router.get("/{chat_id}/messages", status_code=200)
+async def get_messages(chat_id: str, db: DbSession) -> List[Message]:
+    messages = get_chat_messages(db, chat_id)
+    return [Message.model_validate(message) for message in messages]

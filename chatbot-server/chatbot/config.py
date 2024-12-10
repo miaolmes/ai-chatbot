@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     chatbot_data_dir: str = "./data"
     chatbot_doc_store: str = os.path.join(chatbot_data_dir, "doc_store")
     chatbot_vector_store: str = os.path.join(chatbot_data_dir, "vector_store")
+    chatbot_db_store: str = os.path.join(chatbot_data_dir, "db")
 
     class Config:
         env_file = ".env"

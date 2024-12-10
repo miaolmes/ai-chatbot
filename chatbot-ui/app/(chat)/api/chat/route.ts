@@ -5,22 +5,12 @@ import {
   streamObject,
   streamText,
 } from "ai";
-import { createOpenAI } from '@ai-sdk/openai';
+import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
 
 import { customModel } from "@/lib/ai";
 import { models } from "@/lib/ai/models";
 import { systemPrompt } from "@/lib/ai/prompts";
-import {
-  deleteChatById,
-  getChatById,
-  getDocumentById,
-  saveChat,
-  saveDocument,
-  saveMessages,
-  saveSuggestions,
-} from "@/lib/db/queries";
-import type { Suggestion } from "@/lib/db/schema";
 import {
   generateUUID,
   getMostRecentUserMessage,
@@ -28,6 +18,7 @@ import {
 } from "@/lib/utils";
 
 import { generateTitleFromUserMessage } from "../../actions";
+import { apiClient } from "@/lib/api";
 
 export const maxDuration = 60;
 
@@ -48,8 +39,8 @@ const weatherTools: AllowedTools[] = ["getWeather"];
 const allTools: AllowedTools[] = [...blocksTools, ...weatherTools];
 
 const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-  baseURL: "http://127.0.0.1:8000/v1"
+  apiKey: process.env.OPENAI_API_KEY || "",
+  baseURL: "http://127.0.0.1:8000/v1",
 });
 
 export async function POST(request: Request) {
@@ -73,20 +64,16 @@ export async function POST(request: Request) {
     return new Response("No user message found", { status: 400 });
   }
 
-  // const chat = await getChatById({ id });
+  const chat = await apiClient.getChat(id);
 
-  // if (!chat) {
-  //   const title = await generateTitleFromUserMessage({ message: userMessage });
-  //   await saveChat({ id, title });
-  // }
-
+  // Save user message
   const userMessageId = generateUUID();
-
-  // await saveMessages({
-  //   messages: [
-  //     { ...userMessage, id: userMessageId, createdAt: new Date(), chatId: id },
-  //   ],
-  // });
+  await apiClient.createMessage(id, {
+    id: userMessageId,
+    role: "user",
+    content: userMessage.content.toString(),
+    createdAt: new Date(),
+  });
 
   const streamingData = new StreamData();
 
@@ -100,6 +87,27 @@ export async function POST(request: Request) {
     system: systemPrompt,
     messages: coreMessages,
     onFinish: async ({ response }) => {
+      const responseMessagesWithoutIncompleteToolCalls =
+        sanitizeResponseMessages(response.messages);
+      responseMessagesWithoutIncompleteToolCalls.forEach(
+        (message) => {
+          const messageId = generateUUID();
+
+          if (message.role === 'assistant') {
+            streamingData.appendMessageAnnotation({
+              messageIdFromServer: messageId,
+            });
+          }
+          console.log(message.role)
+          console.log(message.content)
+          apiClient.createMessage(id, {
+            id: messageId,
+            chatId: id,
+            role: message.role,
+            content: message.content[0].text,
+            createdAt: new Date(),
+          });
+        });
       streamingData.close();
     },
     experimental_telemetry: {
@@ -122,8 +130,7 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    const chat = await getChatById({ id });
-    await deleteChatById({ id });
+    await apiClient.deleteChat(id);
     return new Response("Chat deleted", { status: 200 });
   } catch (error) {
     return new Response("An error occurred while processing your request", {
