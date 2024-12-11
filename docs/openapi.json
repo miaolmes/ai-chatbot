@@ -11,7 +11,7 @@
                     "chat"
                 ],
                 "summary": "Create Chat Completion",
-                "operationId": "create_chat_completion_v1_chat_completions_post",
+                "operationId": "createChatCompletion",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -50,7 +50,7 @@
                     "chat"
                 ],
                 "summary": "Get Chat",
-                "operationId": "get_chat_v1_chat__chat_id__get",
+                "operationId": "getChat",
                 "parameters": [
                     {
                         "name": "chat_id",
@@ -90,7 +90,7 @@
                     "chat"
                 ],
                 "summary": "Delete Chat",
-                "operationId": "delete_chat_v1_chat__chat_id__delete",
+                "operationId": "deleteChat",
                 "parameters": [
                     {
                         "name": "chat_id",
@@ -125,7 +125,7 @@
                     "chat"
                 ],
                 "summary": "Get Chats",
-                "operationId": "get_chats_v1_chat__get",
+                "operationId": "getChats",
                 "responses": {
                     "200": {
                         "description": "Successful Response",
@@ -136,7 +136,7 @@
                                         "$ref": "#/components/schemas/Chat"
                                     },
                                     "type": "array",
-                                    "title": "Response Get Chats V1 Chat  Get"
+                                    "title": "Response Getchats"
                                 }
                             }
                         }
@@ -150,7 +150,7 @@
                     "chat"
                 ],
                 "summary": "Create Message",
-                "operationId": "create_message_v1_chat__chat_id__messages_post",
+                "operationId": "createMessage",
                 "parameters": [
                     {
                         "name": "chat_id",
@@ -198,7 +198,7 @@
                     "chat"
                 ],
                 "summary": "Get Messages",
-                "operationId": "get_messages_v1_chat__chat_id__messages_get",
+                "operationId": "getMessages",
                 "parameters": [
                     {
                         "name": "chat_id",
@@ -220,7 +220,7 @@
                                     "items": {
                                         "$ref": "#/components/schemas/Message"
                                     },
-                                    "title": "Response Get Messages V1 Chat  Chat Id  Messages Get"
+                                    "title": "Response Getmessages"
                                 }
                             }
                         }
@@ -244,12 +244,12 @@
                     "files"
                 ],
                 "summary": "Upload File",
-                "operationId": "upload_file_v1_files_upload_post",
+                "operationId": "uploadFile",
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/Body_upload_file_v1_files_upload_post"
+                                "$ref": "#/components/schemas/Body_uploadFile"
                             }
                         }
                     },
@@ -301,12 +301,12 @@
     },
     "components": {
         "schemas": {
-            "Body_upload_file_v1_files_upload_post": {
+            "Body_uploadFile": {
                 "properties": {
-                    "purpose": {
+                    "chat_id": {
                         "type": "string",
-                        "title": "Purpose",
-                        "description": "The purpose of the uploaded file."
+                        "title": "Chat Id",
+                        "description": "The chatId the uploaded file."
                     },
                     "file": {
                         "type": "string",
@@ -317,10 +317,10 @@
                 },
                 "type": "object",
                 "required": [
-                    "purpose",
+                    "chat_id",
                     "file"
                 ],
-                "title": "Body_upload_file_v1_files_upload_post"
+                "title": "Body_uploadFile"
             },
             "Chat": {
                 "properties": {
@@ -535,10 +535,16 @@
             "Message": {
                 "properties": {
                     "id": {
-                        "type": "string",
-                        "format": "uuid",
-                        "title": "Id",
-                        "description": "The unique identifier of the chat."
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Id"
                     },
                     "role": {
                         "type": "string",
@@ -553,7 +559,6 @@
                 },
                 "type": "object",
                 "required": [
-                    "id",
                     "role",
                     "content"
                 ],

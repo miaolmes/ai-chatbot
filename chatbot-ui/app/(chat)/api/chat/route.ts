@@ -17,7 +17,6 @@ import {
   sanitizeResponseMessages,
 } from "@/lib/utils";
 
-import { generateTitleFromUserMessage } from "../../actions";
 import { apiClient } from "@/lib/api";
 
 export const maxDuration = 60;
@@ -56,6 +55,9 @@ export async function POST(request: Request) {
   if (!model) {
     return new Response("Model not found", { status: 404 });
   }
+  messages.forEach((message) => {
+    message.experimental_attachments = []
+  });
 
   const coreMessages = convertToCoreMessages(messages);
   const userMessage = getMostRecentUserMessage(coreMessages);
@@ -71,7 +73,7 @@ export async function POST(request: Request) {
   await apiClient.createMessage(id, {
     id: userMessageId,
     role: "user",
-    content: userMessage.content.toString(),
+    content: userMessage.content[0].text,
     createdAt: new Date(),
   });
 
@@ -98,8 +100,6 @@ export async function POST(request: Request) {
               messageIdFromServer: messageId,
             });
           }
-          console.log(message.role)
-          console.log(message.content)
           apiClient.createMessage(id, {
             id: messageId,
             chatId: id,

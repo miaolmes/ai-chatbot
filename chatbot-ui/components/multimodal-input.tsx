@@ -135,6 +135,7 @@ function PureMultimodalInput({
   const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('chat_id', chatId);
 
     try {
       const response = await fetch('/api/files/upload', {
@@ -144,7 +145,9 @@ function PureMultimodalInput({
 
       if (response.ok) {
         const data = await response.json();
-        const { url, pathname, contentType } = data;
+        const url = "http://127.0.0.1:8000/v1/files?id=" + data.id;
+        const pathname = data.filename;
+        const contentType = file.type;
 
         return {
           url,

@@ -172,11 +172,11 @@ export interface HTTPValidationError {
  */
 export interface Message {
     /**
-     * The unique identifier of the chat.
+     * 
      * @type {string}
      * @memberof Message
      */
-    'id': string;
+    'id'?: string | null;
     /**
      * The role of the message sender (e.g., \'user\', \'assistant\', or \'system\').
      * @type {string}
@@ -243,9 +243,9 @@ export const ChatApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createChatCompletionV1ChatCompletionsPost: async (chatCompletionRequest: ChatCompletionRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createChatCompletion: async (chatCompletionRequest: ChatCompletionRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'chatCompletionRequest' is not null or undefined
-            assertParamExists('createChatCompletionV1ChatCompletionsPost', 'chatCompletionRequest', chatCompletionRequest)
+            assertParamExists('createChatCompletion', 'chatCompletionRequest', chatCompletionRequest)
             const localVarPath = `/v1/chat/completions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -280,11 +280,11 @@ export const ChatApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createMessageV1ChatChatIdMessagesPost: async (chatId: string, message: Message, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createMessage: async (chatId: string, message: Message, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'chatId' is not null or undefined
-            assertParamExists('createMessageV1ChatChatIdMessagesPost', 'chatId', chatId)
+            assertParamExists('createMessage', 'chatId', chatId)
             // verify required parameter 'message' is not null or undefined
-            assertParamExists('createMessageV1ChatChatIdMessagesPost', 'message', message)
+            assertParamExists('createMessage', 'message', message)
             const localVarPath = `/v1/chat/{chat_id}/messages`
                 .replace(`{${"chat_id"}}`, encodeURIComponent(String(chatId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -319,9 +319,9 @@ export const ChatApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteChatV1ChatChatIdDelete: async (chatId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteChat: async (chatId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'chatId' is not null or undefined
-            assertParamExists('deleteChatV1ChatChatIdDelete', 'chatId', chatId)
+            assertParamExists('deleteChat', 'chatId', chatId)
             const localVarPath = `/v1/chat/{chat_id}`
                 .replace(`{${"chat_id"}}`, encodeURIComponent(String(chatId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -353,9 +353,9 @@ export const ChatApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChatV1ChatChatIdGet: async (chatId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getChat: async (chatId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'chatId' is not null or undefined
-            assertParamExists('getChatV1ChatChatIdGet', 'chatId', chatId)
+            assertParamExists('getChat', 'chatId', chatId)
             const localVarPath = `/v1/chat/{chat_id}`
                 .replace(`{${"chat_id"}}`, encodeURIComponent(String(chatId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -386,7 +386,7 @@ export const ChatApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChatsV1ChatGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getChats: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/chat/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -417,9 +417,9 @@ export const ChatApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMessagesV1ChatChatIdMessagesGet: async (chatId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getMessages: async (chatId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'chatId' is not null or undefined
-            assertParamExists('getMessagesV1ChatChatIdMessagesGet', 'chatId', chatId)
+            assertParamExists('getMessages', 'chatId', chatId)
             const localVarPath = `/v1/chat/{chat_id}/messages`
                 .replace(`{${"chat_id"}}`, encodeURIComponent(String(chatId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -461,10 +461,10 @@ export const ChatApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createChatCompletionV1ChatCompletionsPost(chatCompletionRequest: ChatCompletionRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createChatCompletionV1ChatCompletionsPost(chatCompletionRequest, options);
+        async createChatCompletion(chatCompletionRequest: ChatCompletionRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createChatCompletion(chatCompletionRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ChatApi.createChatCompletionV1ChatCompletionsPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ChatApi.createChatCompletion']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -475,10 +475,10 @@ export const ChatApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createMessageV1ChatChatIdMessagesPost(chatId: string, message: Message, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createMessageV1ChatChatIdMessagesPost(chatId, message, options);
+        async createMessage(chatId: string, message: Message, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createMessage(chatId, message, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ChatApi.createMessageV1ChatChatIdMessagesPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ChatApi.createMessage']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -488,10 +488,10 @@ export const ChatApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteChatV1ChatChatIdDelete(chatId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteChatV1ChatChatIdDelete(chatId, options);
+        async deleteChat(chatId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteChat(chatId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ChatApi.deleteChatV1ChatChatIdDelete']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ChatApi.deleteChat']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -501,10 +501,10 @@ export const ChatApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getChatV1ChatChatIdGet(chatId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Chat>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getChatV1ChatChatIdGet(chatId, options);
+        async getChat(chatId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Chat>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getChat(chatId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ChatApi.getChatV1ChatChatIdGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ChatApi.getChat']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -513,10 +513,10 @@ export const ChatApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getChatsV1ChatGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Chat>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getChatsV1ChatGet(options);
+        async getChats(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Chat>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getChats(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ChatApi.getChatsV1ChatGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ChatApi.getChats']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -526,10 +526,10 @@ export const ChatApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getMessagesV1ChatChatIdMessagesGet(chatId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getMessagesV1ChatChatIdMessagesGet(chatId, options);
+        async getMessages(chatId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Message>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getMessages(chatId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ChatApi.getMessagesV1ChatChatIdMessagesGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ChatApi.getMessages']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -549,8 +549,8 @@ export const ChatApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createChatCompletionV1ChatCompletionsPost(chatCompletionRequest: ChatCompletionRequest, options?: RawAxiosRequestConfig): AxiosPromise<any> {
-            return localVarFp.createChatCompletionV1ChatCompletionsPost(chatCompletionRequest, options).then((request) => request(axios, basePath));
+        createChatCompletion(chatCompletionRequest: ChatCompletionRequest, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+            return localVarFp.createChatCompletion(chatCompletionRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -560,8 +560,8 @@ export const ChatApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createMessageV1ChatChatIdMessagesPost(chatId: string, message: Message, options?: RawAxiosRequestConfig): AxiosPromise<any> {
-            return localVarFp.createMessageV1ChatChatIdMessagesPost(chatId, message, options).then((request) => request(axios, basePath));
+        createMessage(chatId: string, message: Message, options?: RawAxiosRequestConfig): AxiosPromise<any> {
+            return localVarFp.createMessage(chatId, message, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -570,8 +570,8 @@ export const ChatApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteChatV1ChatChatIdDelete(chatId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.deleteChatV1ChatChatIdDelete(chatId, options).then((request) => request(axios, basePath));
+        deleteChat(chatId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteChat(chatId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -580,8 +580,8 @@ export const ChatApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChatV1ChatChatIdGet(chatId: string, options?: RawAxiosRequestConfig): AxiosPromise<Chat> {
-            return localVarFp.getChatV1ChatChatIdGet(chatId, options).then((request) => request(axios, basePath));
+        getChat(chatId: string, options?: RawAxiosRequestConfig): AxiosPromise<Chat> {
+            return localVarFp.getChat(chatId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -589,8 +589,8 @@ export const ChatApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChatsV1ChatGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<Chat>> {
-            return localVarFp.getChatsV1ChatGet(options).then((request) => request(axios, basePath));
+        getChats(options?: RawAxiosRequestConfig): AxiosPromise<Array<Chat>> {
+            return localVarFp.getChats(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -599,8 +599,8 @@ export const ChatApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMessagesV1ChatChatIdMessagesGet(chatId: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Message>> {
-            return localVarFp.getMessagesV1ChatChatIdMessagesGet(chatId, options).then((request) => request(axios, basePath));
+        getMessages(chatId: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Message>> {
+            return localVarFp.getMessages(chatId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -620,8 +620,8 @@ export class ChatApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ChatApi
      */
-    public createChatCompletionV1ChatCompletionsPost(chatCompletionRequest: ChatCompletionRequest, options?: RawAxiosRequestConfig) {
-        return ChatApiFp(this.configuration).createChatCompletionV1ChatCompletionsPost(chatCompletionRequest, options).then((request) => request(this.axios, this.basePath));
+    public createChatCompletion(chatCompletionRequest: ChatCompletionRequest, options?: RawAxiosRequestConfig) {
+        return ChatApiFp(this.configuration).createChatCompletion(chatCompletionRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -633,8 +633,8 @@ export class ChatApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ChatApi
      */
-    public createMessageV1ChatChatIdMessagesPost(chatId: string, message: Message, options?: RawAxiosRequestConfig) {
-        return ChatApiFp(this.configuration).createMessageV1ChatChatIdMessagesPost(chatId, message, options).then((request) => request(this.axios, this.basePath));
+    public createMessage(chatId: string, message: Message, options?: RawAxiosRequestConfig) {
+        return ChatApiFp(this.configuration).createMessage(chatId, message, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -645,8 +645,8 @@ export class ChatApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ChatApi
      */
-    public deleteChatV1ChatChatIdDelete(chatId: string, options?: RawAxiosRequestConfig) {
-        return ChatApiFp(this.configuration).deleteChatV1ChatChatIdDelete(chatId, options).then((request) => request(this.axios, this.basePath));
+    public deleteChat(chatId: string, options?: RawAxiosRequestConfig) {
+        return ChatApiFp(this.configuration).deleteChat(chatId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -657,8 +657,8 @@ export class ChatApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ChatApi
      */
-    public getChatV1ChatChatIdGet(chatId: string, options?: RawAxiosRequestConfig) {
-        return ChatApiFp(this.configuration).getChatV1ChatChatIdGet(chatId, options).then((request) => request(this.axios, this.basePath));
+    public getChat(chatId: string, options?: RawAxiosRequestConfig) {
+        return ChatApiFp(this.configuration).getChat(chatId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -668,8 +668,8 @@ export class ChatApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ChatApi
      */
-    public getChatsV1ChatGet(options?: RawAxiosRequestConfig) {
-        return ChatApiFp(this.configuration).getChatsV1ChatGet(options).then((request) => request(this.axios, this.basePath));
+    public getChats(options?: RawAxiosRequestConfig) {
+        return ChatApiFp(this.configuration).getChats(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -680,8 +680,8 @@ export class ChatApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ChatApi
      */
-    public getMessagesV1ChatChatIdMessagesGet(chatId: string, options?: RawAxiosRequestConfig) {
-        return ChatApiFp(this.configuration).getMessagesV1ChatChatIdMessagesGet(chatId, options).then((request) => request(this.axios, this.basePath));
+    public getMessages(chatId: string, options?: RawAxiosRequestConfig) {
+        return ChatApiFp(this.configuration).getMessages(chatId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -797,16 +797,16 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Upload File
-         * @param {string} purpose The purpose of the uploaded file.
+         * @param {string} chatId The chatId the uploaded file.
          * @param {File} file The file to be uploaded.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadFileV1FilesUploadPost: async (purpose: string, file: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'purpose' is not null or undefined
-            assertParamExists('uploadFileV1FilesUploadPost', 'purpose', purpose)
+        uploadFile: async (chatId: string, file: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'chatId' is not null or undefined
+            assertParamExists('uploadFile', 'chatId', chatId)
             // verify required parameter 'file' is not null or undefined
-            assertParamExists('uploadFileV1FilesUploadPost', 'file', file)
+            assertParamExists('uploadFile', 'file', file)
             const localVarPath = `/v1/files/upload`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -821,8 +821,8 @@ export const FilesApiAxiosParamCreator = function (configuration?: Configuration
             const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
-            if (purpose !== undefined) { 
-                localVarFormParams.append('purpose', purpose as any);
+            if (chatId !== undefined) { 
+                localVarFormParams.append('chat_id', chatId as any);
             }
     
             if (file !== undefined) { 
@@ -855,15 +855,15 @@ export const FilesApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Upload File
-         * @param {string} purpose The purpose of the uploaded file.
+         * @param {string} chatId The chatId the uploaded file.
          * @param {File} file The file to be uploaded.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async uploadFileV1FilesUploadPost(purpose: string, file: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadFileV1FilesUploadPost(purpose, file, options);
+        async uploadFile(chatId: string, file: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FileResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadFile(chatId, file, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['FilesApi.uploadFileV1FilesUploadPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['FilesApi.uploadFile']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -879,13 +879,13 @@ export const FilesApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Upload File
-         * @param {string} purpose The purpose of the uploaded file.
+         * @param {string} chatId The chatId the uploaded file.
          * @param {File} file The file to be uploaded.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadFileV1FilesUploadPost(purpose: string, file: File, options?: RawAxiosRequestConfig): AxiosPromise<FileResponse> {
-            return localVarFp.uploadFileV1FilesUploadPost(purpose, file, options).then((request) => request(axios, basePath));
+        uploadFile(chatId: string, file: File, options?: RawAxiosRequestConfig): AxiosPromise<FileResponse> {
+            return localVarFp.uploadFile(chatId, file, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -900,14 +900,14 @@ export class FilesApi extends BaseAPI {
     /**
      * 
      * @summary Upload File
-     * @param {string} purpose The purpose of the uploaded file.
+     * @param {string} chatId The chatId the uploaded file.
      * @param {File} file The file to be uploaded.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FilesApi
      */
-    public uploadFileV1FilesUploadPost(purpose: string, file: File, options?: RawAxiosRequestConfig) {
-        return FilesApiFp(this.configuration).uploadFileV1FilesUploadPost(purpose, file, options).then((request) => request(this.axios, this.basePath));
+    public uploadFile(chatId: string, file: File, options?: RawAxiosRequestConfig) {
+        return FilesApiFp(this.configuration).uploadFile(chatId, file, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

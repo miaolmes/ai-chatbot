@@ -42,8 +42,10 @@ class Message(BaseModel):
 
 class ChatCompletionRequest(BaseModel):
     model: str = Field(..., description="The model to use for generating completions (e.g., 'gpt-3.5-turbo').")
-    messages: List[Message] = Field(..., description="A list of messages describing the conversation history.")
-    max_tokens: Optional[int] = Field(None, description="The maximum number of tokens to generate in the response.")
+    messages: List[Message] = Field(
+        ..., description="A list of messages describing the conversation history.")
+    max_tokens: Optional[int] = Field(
+        None, description="The maximum number of tokens to generate in the response.")
     temperature: Optional[float] = Field(
         1.0, ge=0, le=2,
         description="Sampling temperature. Higher values make output more random; lower values make it more deterministic."
@@ -69,7 +71,7 @@ class ChatCompletionRequest(BaseModel):
     )
 
 
-@router.post("/completions")
+@router.post("/completions", operation_id="createChatCompletion")
 async def create_chat_completion(
         request: ChatCompletionRequest,
         client: AsyncOpenAI = Depends(get_client)
@@ -104,7 +106,7 @@ async def create_chat_completion(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/{chat_id}", status_code=200)
+@router.get("/{chat_id}", status_code=200, operation_id="getChat")
 async def get_chat(request: Request, chat_id: str, db: DbSession) -> Chat:
     chat = get_chat_by_id(db, chat_id)
     if not chat:
@@ -112,20 +114,20 @@ async def get_chat(request: Request, chat_id: str, db: DbSession) -> Chat:
     return Chat.model_validate(chat)
 
 
-@router.delete("/{chat_id}", status_code=204)
+@router.delete("/{chat_id}", status_code=204, operation_id="deleteChat")
 async def delete_chat(request: Request, chat_id: str, db: DbSession):
     deleted = delete_chat_by_id(db, chat_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Chat not found")
 
 
-@router.get("/", status_code=200)
+@router.get("/", status_code=200, operation_id="getChats")
 async def get_chats(request: Request, db: DbSession) -> List[Chat]:
     chats = get_chat_history(db)
     return [Chat.model_validate(chat) for chat in chats]
 
 
-@router.post("/{chat_id}/messages", status_code=201)
+@router.post("/{chat_id}/messages", status_code=201, operation_id="createMessage")
 async def create_message(request: Request, chat_id: str, message: Message, db: DbSession):
     # create chat if not exists
     chat = get_chat_by_id(db, chat_id)
@@ -144,7 +146,7 @@ async def create_message(request: Request, chat_id: str, message: Message, db: D
     return Message.model_validate(db_message)
 
 
-@router.get("/{chat_id}/messages", status_code=200)
+@router.get("/{chat_id}/messages", status_code=200, operation_id="getMessages")
 async def get_messages(chat_id: str, db: DbSession) -> List[Message]:
     messages = get_chat_messages(db, chat_id)
     return [Message.model_validate(message) for message in messages]

@@ -15,16 +15,13 @@ api_router.include_router(chat.router)
 api_router.include_router(files.router)
 app.include_router(api_router)
 
-settings = get_settings()
-if not os.path.exists(settings.chatbot_data_dir):
-    os.makedirs(settings.chatbot_doc_store)
-    os.makedirs(settings.chatbot_vector_store)
-    os.makedirs(settings.chatbot_db_store)
-
 
 @app.on_event("startup")
 def on_startup():
-    print("Init database and tables...")
+    settings = get_settings()
+    os.makedirs(settings.chatbot_doc_store, exist_ok=True)
+    os.makedirs(settings.chatbot_vector_store, exist_ok=True)
+    os.makedirs(settings.chatbot_db_store, exist_ok=True)
     create_db_and_tables()
 
 
