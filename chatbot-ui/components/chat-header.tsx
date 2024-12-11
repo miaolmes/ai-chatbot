@@ -58,14 +58,6 @@ function PureChatHeader({
           className="order-1 md:order-2"
         />
       )}
-
-      {!isReadonly && (
-        <VisibilitySelector
-          chatId={chatId}
-          selectedVisibilityType={selectedVisibilityType}
-          className="order-1 md:order-3"
-        />
-      )}
     </header>
   );
 }
