@@ -1,0 +1,25 @@
+version: "3"
+services:
+  chatbot-ui:
+    image: chatbot-ui:latest
+    container_name: chatbot-ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - chatbot-server
+    networks:
+      - chatbot-network
+
+  chatbot-server:
+    image: chatbot-server:latest
+    container_name: chatbot-server
+    ports:
+      - "8000:8000"
+    networks:
+      - chatbot-network
+    volumes:
+      - ./data:/app/data
+
+networks:
+  chatbot-network:
+    driver: bridge
