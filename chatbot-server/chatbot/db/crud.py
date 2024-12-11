@@ -32,8 +32,16 @@ def get_chat_history(session: Session) -> List[Chat]:
 def delete_chat_by_id(session: Session, chat_id: str) -> None:
     chat = get_chat_by_id(session, chat_id)
     if chat:
-        session.delete(chat)
+        # Bulk delete messages associated with the chat
+        session.query(Message).filter(Message.chatId == uuid.UUID(chat_id)).delete()
+        
+        # Delete the chat
+        session.query(Chat).filter(Chat.id == uuid.UUID(chat_id)).delete()
         session.commit()
+        return True
+
+    return False
+        
 
 
 def create_chat_message(
