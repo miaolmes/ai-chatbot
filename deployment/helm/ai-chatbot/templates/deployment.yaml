@@ -1,0 +1,56 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ai-chatbot.fullname" . }}-ui
+  labels:
+    {{- include "ai-chatbot.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "ai-chatbot.name" . }}-ui
+  template:
+    metadata:
+      labels:
+        app: {{ include "ai-chatbot.name" . }}-ui
+    spec:
+      containers:
+        - name: ui
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 3000
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ai-chatbot.fullname" . }}-server
+  labels:
+    {{- include "ai-chatbot.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "ai-chatbot.name" . }}-server
+  template:
+    metadata:
+      labels:
+        app: {{ include "ai-chatbot.name" . }}-server
+    spec:
+      containers:
+        - name: server
+          image: "{{ .Values.serverImage.repository }}:{{ .Values.serverImage.tag }}"
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-pvc

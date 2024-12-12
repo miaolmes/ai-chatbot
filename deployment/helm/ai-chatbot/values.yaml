@@ -1,0 +1,36 @@
+
+replicaCount: 1
+
+image:
+  repository: chatbot-ui
+  tag: latest
+  pullPolicy: IfNotPresent
+
+serverImage:
+  repository: chatbot-server
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+serverService:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
