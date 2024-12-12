@@ -62,3 +62,8 @@ docker compse -f deployment/docker-compose.yaml up -d
 ```
 helm upgrade --install deployment/helm/ai-chatbot
 ```
+
+## 系统截图
+
+![](docs/screenshots/light.png)
+![](docs/screenshots/dark.png)
