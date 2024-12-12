@@ -49,6 +49,16 @@ poetry run python main.py
 ### 离线文档
 - 文件路径：`./docs/openapi.json`
 
-## 打包
+## 部署
 
-开发中，TODO。
+### Docker Compose
+
+```
+docker compse -f deployment/docker-compose.yaml up -d
+```
+
+### Kubernetes
+
+```
+helm upgrade --install deployment/helm/ai-chatbot
+```
