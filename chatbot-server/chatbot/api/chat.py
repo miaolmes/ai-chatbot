@@ -5,6 +5,9 @@ from fastapi import HTTPException, Depends, APIRouter, Request
 from openai import AsyncOpenAI
 from pydantic import BaseModel, Field
 from starlette.responses import StreamingResponse
+from langchain.vectorstores import Chroma
+from langchain.embeddings.openai import OpenAIEmbeddings
+from chatbot.config import get_settings
 
 from chatbot.db.database import DbSession
 from chatbot.model.openai import get_client
@@ -71,17 +74,46 @@ class ChatCompletionRequest(BaseModel):
     )
 
 
+async def retrieve_relevant_documents(query: str, k: int = 3) -> str:
+    settings = get_settings()
+    embeddings = OpenAIEmbeddings(
+        openai_api_base=settings.openai_api_base,
+        openai_api_key=settings.openai_api_key
+    )
+    vectorstore = Chroma(
+        collection_name='documents',
+        persist_directory=settings.chatbot_vector_store,
+        embedding_function=embeddings
+    )
+    docs = vectorstore.similarity_search(query, k=k)
+    return "\n\n".join([doc.page_content for doc in docs])
+
+
 @router.post("/completions", operation_id="createChatCompletion")
 async def create_chat_completion(
         request: ChatCompletionRequest,
         client: AsyncOpenAI = Depends(get_client)
 ):
     try:
+        # Get the user's last message
+        user_message = next((msg for msg in reversed(request.messages) if msg.role == "user"), None)
+        if user_message:
+            # Retrieve relevant documents
+            context = await retrieve_relevant_documents(user_message.content)
+            
+            # Add system message with context
+            system_message = Message(
+                role="system",
+                content=f"Below is some relevant context that may help answer the user's question:\n\n{context}"
+            )
+            request.messages.insert(0, system_message)
+
         # If streaming response is requested
         if request.stream:
             async def generate():
                 # Exclude 'stream' from the model dump
                 request_data = request.model_dump(exclude={"stream"})
+                print(request_data)
                 stream = await client.chat.completions.create(
                     **request_data,
                     stream=True
@@ -97,6 +129,7 @@ async def create_chat_completion(
 
         # Non-streaming response
         request_data = request.model_dump(exclude={"stream"})
+        print(request_data)
         completion = await client.chat.completions.create(
             **request_data
         )

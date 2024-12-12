@@ -17,6 +17,11 @@ langchain-core = "^0.3.22"
 langchain-chroma = "^0.1.4"
 httpx = { extras = ["socks"], version = "^0.28.0" }
 sqlmodel = "^0.0.22"
+watchdog = "^6.0.0"
+chromadb = "^0.5.23"
+langchain-community = "^0.3.11"
+langchain-openai = "^0.2.12"
+pymupdf = "^1.25.1"
 
 [build-system]
 requires = ["poetry-core"]
