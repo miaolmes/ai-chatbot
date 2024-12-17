@@ -8,6 +8,7 @@ from starlette.responses import StreamingResponse
 from langchain.vectorstores import Chroma
 from langchain.embeddings.openai import OpenAIEmbeddings
 from chatbot.config import get_settings
+from fastapi.security import OAuth2PasswordBearer
 
 from chatbot.db.database import DbSession
 from chatbot.model.openai import get_client
@@ -19,6 +20,8 @@ from chatbot.db.crud import (
     create_chat_message,
     get_chat_messages
 )
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter(
     prefix="/v1/chat",
@@ -92,7 +95,8 @@ async def retrieve_relevant_documents(query: str, k: int = 3) -> str:
 @router.post("/completions", operation_id="createChatCompletion")
 async def create_chat_completion(
         request: ChatCompletionRequest,
-        client: AsyncOpenAI = Depends(get_client)
+        client: AsyncOpenAI = Depends(get_client),
+        token: str = Depends(oauth2_scheme)
 ):
     try:
         # Get the user's last message
@@ -140,7 +144,7 @@ async def create_chat_completion(
 
 
 @router.get("/{chat_id}", status_code=200, operation_id="getChat")
-async def get_chat(request: Request, chat_id: str, db: DbSession) -> Chat:
+async def get_chat(request: Request, chat_id: str, db: DbSession, token: str = Depends(oauth2_scheme)) -> Chat:
     chat = get_chat_by_id(db, chat_id)
     if not chat:
         raise HTTPException(status_code=404, detail="Chat not found")
@@ -148,20 +152,20 @@ async def get_chat(request: Request, chat_id: str, db: DbSession) -> Chat:
 
 
 @router.delete("/{chat_id}", status_code=204, operation_id="deleteChat")
-async def delete_chat(request: Request, chat_id: str, db: DbSession):
+async def delete_chat(request: Request, chat_id: str, db: DbSession, token: str = Depends(oauth2_scheme)):
     deleted = delete_chat_by_id(db, chat_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Chat not found")
 
 
 @router.get("/", status_code=200, operation_id="getChats")
-async def get_chats(request: Request, db: DbSession) -> List[Chat]:
+async def get_chats(request: Request, db: DbSession, token: str = Depends(oauth2_scheme)) -> List[Chat]:
     chats = get_chat_history(db)
     return [Chat.model_validate(chat) for chat in chats]
 
 
 @router.post("/{chat_id}/messages", status_code=201, operation_id="createMessage")
-async def create_message(request: Request, chat_id: str, message: Message, db: DbSession):
+async def create_message(request: Request, chat_id: str, message: Message, db: DbSession, token: str = Depends(oauth2_scheme)):
     # create chat if not exists
     chat = get_chat_by_id(db, chat_id)
     print(chat)
@@ -180,6 +184,6 @@ async def create_message(request: Request, chat_id: str, message: Message, db: D
 
 
 @router.get("/{chat_id}/messages", status_code=200, operation_id="getMessages")
-async def get_messages(chat_id: str, db: DbSession) -> List[Message]:
+async def get_messages(chat_id: str, db: DbSession, token: str = Depends(oauth2_scheme)) -> List[Message]:
     messages = get_chat_messages(db, chat_id)
     return [Message.model_validate(message) for message in messages]
