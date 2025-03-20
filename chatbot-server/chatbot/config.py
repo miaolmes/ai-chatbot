@@ -10,7 +10,6 @@ class Settings(BaseSettings):
     chatbot_doc_store: str = os.path.join(chatbot_data_dir, "doc_store")
     chatbot_vector_store: str = os.path.join(chatbot_data_dir, "vector_store")
     chatbot_db_store: str = os.path.join(chatbot_data_dir, "db")
-    jwt_secret_key: str = 'welcome123'
 
     class Config:
         env_file = ".env"
