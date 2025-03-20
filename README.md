@@ -56,7 +56,7 @@ poetry run python main.py
 ### Docker Compose
 
 ```
-docker compose -f deployment/docker-compose.yaml up -d
+docker compse -f deployment/docker-compose.yaml up -d
 ```
 
 ### Kubernetes
